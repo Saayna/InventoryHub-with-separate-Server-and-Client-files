@@ -1,0 +1,39 @@
+@code {
+    private Product[]? products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+{
+    var response = await httpClient.GetAsync("/api/productlist");
+    response.EnsureSuccessStatusCode();
+
+    var json = await response.Content.ReadAsStringAsync();
+
+    products = JsonSerializer.Deserialize<Product[]>(json,
+        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+}
+catch (JsonException ex)
+{
+    Console.WriteLine($"JSON error: {ex.Message}");
+    products = Array.Empty<Product>(); // fallback to empty list
+}
+catch (HttpRequestException ex)
+{
+    Console.WriteLine($"Request error: {ex.Message}");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Unexpected error: {ex.Message}");
+}
+
+    }
+
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public double Price { get; set; }
+        public int Stock { get; set; }
+    }
+}

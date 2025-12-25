@@ -3,13 +3,13 @@ using ClientApp.Services;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 
-// Copilot recommended DI for HttpClient instead of manual instantiation.
+// Copilot suggested DI for HttpClient instead of manual instantiation
 builder.Services.AddScoped(sp => new HttpClient
 {
-    BaseAddress = new Uri("http://localhost:5000") // Adjust to your ServerApp port
+    BaseAddress = new Uri("http://localhost:5000") // adjust to your ServerApp port
 });
 
-// Copilot suggested a singleton cache-backed product service to eliminate redundant calls.
+// Register ProductService for caching and API calls
 builder.Services.AddSingleton<ProductService>();
 
 await builder.Build().RunAsync();
